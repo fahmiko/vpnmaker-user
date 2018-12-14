@@ -22,6 +22,12 @@ public interface ApiInterface {
             @Field("password") String password
     );
 
+    @FormUrlEncoded
+    @POST("vpn/single")
+    Call<GetAcc> getAccount(
+            @Field("id") String id
+    );
+
     @Multipart
     @POST("user/all")
     Call<GetUser> putUser(
@@ -30,6 +36,16 @@ public interface ApiInterface {
             @Part("name") RequestBody name,
             @Part("username") RequestBody username,
             @Part("password") RequestBody password,
+            @Part("action") RequestBody action
+    );
+
+    @Multipart
+    @POST("vpn/all")
+    Call<GetAcc> postAcc(
+            @Part MultipartBody.Part file,
+            @Part("user") RequestBody user,
+            @Part("server") RequestBody server,
+            @Part("active") RequestBody active,
             @Part("action") RequestBody action
     );
 }

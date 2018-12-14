@@ -1,12 +1,15 @@
 package com.uas.fahmiko.vpnuser.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 import com.bumptech.glide.Glide;
@@ -17,7 +20,7 @@ import com.uas.fahmiko.vpnuser.model.*;
 import com.uas.fahmiko.vpnuser.rest.ApiClient;
 
 public class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.MyViewHolder> {
-    private Context context;
+    Context context;
     private List<Server> myServers;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
