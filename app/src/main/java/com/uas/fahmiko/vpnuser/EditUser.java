@@ -25,6 +25,7 @@ import com.uas.fahmiko.vpnuser.rest.ApiClient;
 import com.uas.fahmiko.vpnuser.rest.ApiInterface;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -52,13 +53,14 @@ public class EditUser extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent galleryIntent = new Intent();
-                galleryIntent.setType("image/*");
-                galleryIntent.setAction(Intent.ACTION_PICK);
-                Intent intentChoose = Intent.createChooser(
-                        galleryIntent,
-                        "Pilih foto untuk di-upload");
-                startActivityForResult(intentChoose, 10);
+                dispatchTakePictureIntent();
+//                final Intent galleryIntent = new Intent();
+//                galleryIntent.setType("image/*");
+//                galleryIntent.setAction(Intent.ACTION_PICK);
+//                Intent intentChoose = Intent.createChooser(
+//                        galleryIntent,
+//                        "Pilih foto untuk di-upload");
+//                startActivityForResult(intentChoose, 1);
             }
         });
 
@@ -170,6 +172,42 @@ public class EditUser extends AppCompatActivity {
 //        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
 //        return mediaFile;
 //    }
+    String mCurrentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        File storageDir = Environment.getExternalStorageDirectory();
+        File image = File.createTempFile(
+                "example",  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                startActivityForResult(takePictureIntent, 1);
+            }
+        }
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -181,26 +219,30 @@ public class EditUser extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode ==10){
+            if (requestCode == 1 && resultCode == RESULT_OK) {
+                //Bundle extras = data.getExtras();
+                //Bitmap imageBitmap = (Bitmap) extras.get("data");
+                //mImageView.setImageBitmap(imageBitmap);
+                galleryAddPic();
+            }
             if (data==null){
                 Toast.makeText(getApplicationContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
-                return;
             }
+        }
+        Uri selectedImage = data.getData();
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
 
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            imagePath =cursor.getString(columnIndex);
 
-            if (cursor != null) {
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                imagePath =cursor.getString(columnIndex);
-
-                Picasso.with(getApplicationContext()).load(new File(imagePath)).fit().into(mImageView);
+            Picasso.with(getApplicationContext()).load(new File(imagePath)).fit().into(mImageView);
 //                Glide.with(mContext).load(new File(imagePath)).into(mImageView);
-                cursor.close();
-            }else{
-                Toast.makeText(getApplicationContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
-            }
+            cursor.close();
+        }else{
+            Toast.makeText(getApplicationContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
         }
     }
 }
