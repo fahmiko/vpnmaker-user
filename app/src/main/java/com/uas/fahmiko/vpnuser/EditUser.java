@@ -1,4 +1,5 @@
 package com.uas.fahmiko.vpnuser;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -53,14 +55,28 @@ public class EditUser extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dispatchTakePictureIntent();
-//                final Intent galleryIntent = new Intent();
-//                galleryIntent.setType("image/*");
-//                galleryIntent.setAction(Intent.ACTION_PICK);
-//                Intent intentChoose = Intent.createChooser(
-//                        galleryIntent,
-//                        "Pilih foto untuk di-upload");
-//                startActivityForResult(intentChoose, 1);
+                final CharSequence[] dialogitem = {"Camera","Gallery"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditUser.this);
+                builder.setItems(dialogitem, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case 0:
+                                dispatchTakePictureIntent();
+                                break;
+                            case 1:
+                                final Intent galleryIntent = new Intent();
+                                galleryIntent.setType("image/*");
+                                galleryIntent.setAction(Intent.ACTION_PICK);
+                                Intent intentChoose = Intent.createChooser(
+                                        galleryIntent,
+                                        "Pilih foto untuk di-upload");
+                                startActivityForResult(intentChoose, 2);
+                                break;
+                        }
+
+                    }
+                });
             }
         });
 
@@ -218,31 +234,32 @@ public class EditUser extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode ==10){
-            if (requestCode == 1 && resultCode == RESULT_OK) {
-                //Bundle extras = data.getExtras();
-                //Bitmap imageBitmap = (Bitmap) extras.get("data");
-                //mImageView.setImageBitmap(imageBitmap);
-                galleryAddPic();
-            }
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            //Bundle extras = data.getExtras();
+            //Bitmap imageBitmap = (Bitmap) extras.get("data");
+            //mImageView.setImageBitmap(imageBitmap);
+            galleryAddPic();
+        }
+
+        if (resultCode == RESULT_OK && requestCode == 2){
             if (data==null){
                 Toast.makeText(getApplicationContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
             }
-        }
-        Uri selectedImage = data.getData();
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
 
-        if (cursor != null) {
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            imagePath =cursor.getString(columnIndex);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                imagePath =cursor.getString(columnIndex);
 
-            Picasso.with(getApplicationContext()).load(new File(imagePath)).fit().into(mImageView);
+                Picasso.with(getApplicationContext()).load(new File(imagePath)).fit().into(mImageView);
 //                Glide.with(mContext).load(new File(imagePath)).into(mImageView);
-            cursor.close();
-        }else{
-            Toast.makeText(getApplicationContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
+                cursor.close();
+            }else{
+                Toast.makeText(getApplicationContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
+            }
         }
     }
 }
