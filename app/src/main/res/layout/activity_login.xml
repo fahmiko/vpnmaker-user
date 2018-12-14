@@ -7,7 +7,14 @@
     android:padding="20dp"
     tools:context=".LoginActivity">
 
+    <ImageView
+        android:id="@+id/logo"
+        android:src="@drawable/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <EditText
+        android:layout_below="@id/logo"
         android:id="@+id/txt_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

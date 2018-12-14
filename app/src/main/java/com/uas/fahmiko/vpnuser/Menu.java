@@ -16,6 +16,8 @@ import com.bumptech.glide.Glide;
 import com.uas.fahmiko.vpnuser.helper.Preference;
 import com.uas.fahmiko.vpnuser.rest.ApiClient;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class Menu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Preference preference;
     public void getMenu(){
@@ -51,7 +53,7 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         // Inflate the main; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        ImageView photo = findViewById(R.id.dw_photo);
+        CircleImageView photo = findViewById(R.id.dw_photo);
         TextView tx_name = findViewById(R.id.dw_name);
         TextView tx_user = findViewById(R.id.dw_username);
         Glide.with(getApplicationContext()).load(ApiClient.BASE_URL+"uploads/users/"+preference.getUserPreferece().getPhoto()).into(photo);
@@ -84,11 +86,15 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            Intent i = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(i);
         } else if (id == R.id.nav_gallery) {
             Intent i = new Intent(getApplicationContext(),AccActivity.class);
             startActivity(i);
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_setting) {
+            Intent i = new Intent(getApplicationContext(),EditUser.class);
+            startActivity(i);
+        }else if (id == R.id.nav_send) {
             preference.logout();
             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(i);

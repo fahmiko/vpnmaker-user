@@ -76,7 +76,7 @@ public class EditUser extends AppCompatActivity {
                         }
 
                     }
-                });
+                }).create().show();
             }
         });
 
@@ -193,7 +193,7 @@ public class EditUser extends AppCompatActivity {
     private File createImageFile() throws IOException {
         File storageDir = Environment.getExternalStorageDirectory();
         File image = File.createTempFile(
-                "example",  /* prefix */
+                "vpnmaker",  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
@@ -223,6 +223,8 @@ public class EditUser extends AppCompatActivity {
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
+        mImageView.setImageURI(contentUri);
+        imagePath = mCurrentPhotoPath;
     }
 
     @Override
