@@ -1,17 +1,29 @@
 package com.uas.fahmiko.vpnuser;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-public class MenuItem extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import com.bumptech.glide.Glide;
+import com.uas.fahmiko.vpnuser.helper.Preference;
+import com.uas.fahmiko.vpnuser.rest.ApiClient;
+
+public class Menu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    Preference preference;
     public void getMenu(){
+        preference = new Preference(getApplicationContext());
+        if(preference.checkSavedCredetential()==false){
+            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(i);
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -23,6 +35,7 @@ public class MenuItem extends AppCompatActivity implements NavigationView.OnNavi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -35,8 +48,14 @@ public class MenuItem extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the main; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        ImageView photo = findViewById(R.id.dw_photo);
+        TextView tx_name = findViewById(R.id.dw_name);
+        TextView tx_user = findViewById(R.id.dw_username);
+        Glide.with(getApplicationContext()).load(ApiClient.BASE_URL+"uploads/users/"+preference.getUserPreferece().getPhoto()).into(photo);
+        tx_name.setText(preference.getUserPreferece().getName());
+        tx_user.setText("freevpn@"+preference.getUserPreferece().getUsername()+".com");
         return true;
     }
 
@@ -49,6 +68,8 @@ public class MenuItem extends AppCompatActivity implements NavigationView.OnNavi
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i = new Intent(getApplicationContext(), EditUser.class);
+            startActivity(i);
             return true;
         }
 

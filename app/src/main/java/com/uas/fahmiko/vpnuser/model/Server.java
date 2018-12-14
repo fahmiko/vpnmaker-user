@@ -1,4 +1,4 @@
-package id.group1.vpnaccountmaker.model;
+package com.uas.fahmiko.vpnuser.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Server {

@@ -14,6 +14,14 @@ public class User {
     private String photo;
     private String action;
 
+    public User(String id_user, String name, String username, String password, String photo) {
+        this.id_user = id_user;
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.photo = photo;
+    }
+
     public User(String id_user, String name, String username, String password, String photo, String action) {
         this.id_user = id_user;
         this.name = name;

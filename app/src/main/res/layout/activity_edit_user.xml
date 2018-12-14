@@ -1,9 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="20dp"
     tools:context=".EditUser">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/title_edit"
+        android:layout_centerHorizontal="true"
+        android:text="Edit Profil"
+        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/ed_id"
+         android:layout_marginTop="30dp"
+        android:hint="Id"
+        android:enabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/ed_name"
+        android:layout_below="@id/ed_id"
+        android:hint="Nama"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/ed_username"
+        android:layout_below="@id/ed_name"
+        android:hint="Username"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/ed_pass"
+        android:hint="Password"
+        android:layout_below="@id/ed_username"
+        android:layout_marginTop="10dp"
+        android:inputType="textPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/img_user"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/btn_upload"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@id/ed_pass"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_upload"
+        android:layout_below="@+id/ed_pass"
+        android:layout_marginTop="10dp"
+        android:src="@android:drawable/ic_menu_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorAccent"
+        android:text="Update"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/cardview_light_background"
+        android:id="@+id/btn_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>
