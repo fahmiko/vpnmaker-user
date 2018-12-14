@@ -66,15 +66,15 @@ public class MainActivity extends Menu{
                 ApiInterface mApiInterface = ApiClient.getClient().create(ApiInterface.class);
 
                 MultipartBody.Part body = null;
-                RequestBody reqUser = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                final RequestBody reqUser = MultipartBody.create(MediaType.parse("multipart/form-data"),
                         (preference.getUserPreferece().getId_user().isEmpty())?"":preference.getUserPreferece().getId_user());
-                RequestBody reqServer = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                final RequestBody reqServer = MultipartBody.create(MediaType.parse("multipart/form-data"),
                         (s.getIdServer().isEmpty())?"":s.getIdServer());
-                RequestBody reqActive = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                final RequestBody reqActive = MultipartBody.create(MediaType.parse("multipart/form-data"),
                         (hariIni.isEmpty())?"":hariIni);
 
                 Call<GetAcc> mAccCall;
-                RequestBody reqAction = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                final RequestBody reqAction = MultipartBody.create(MediaType.parse("multipart/form-data"),
                         "insert");
                 mAccCall = mApiInterface.postAcc(body, reqServer,
                         reqUser, reqActive, reqAction);
@@ -82,7 +82,11 @@ public class MainActivity extends Menu{
                 mAccCall.enqueue(new Callback<GetAcc>() {
                     @Override
                     public void onResponse(Call<GetAcc> call, Response<GetAcc> response) {
-                        Toast.makeText(getApplicationContext(), "Account Berhasil dibuat",Toast.LENGTH_LONG).show();
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(reqServer);
+                        sb.append(reqActive);
+                        sb.append(reqUser);
+                        Toast.makeText(getApplicationContext(), sb,Toast.LENGTH_LONG).show();
                         RefreshData();
                     }
 

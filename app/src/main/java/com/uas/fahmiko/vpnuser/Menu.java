@@ -86,7 +86,8 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-
+            Intent i = new Intent(getApplicationContext(),AccActivity.class);
+            startActivity(i);
         } else if (id == R.id.nav_send) {
             preference.logout();
             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
