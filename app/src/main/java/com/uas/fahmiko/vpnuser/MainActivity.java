@@ -59,34 +59,22 @@ public class MainActivity extends Menu{
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mRecyclerView, new ClickListenner() {
             @Override
             public void onClick(View v, int position) {
-                Server s = listServer.get(position);
+                final Server s = listServer.get(position);
                 Date tgl = Calendar.getInstance().getTime();
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                String hariIni = df.format(tgl);
+                final String hariIni = df.format(tgl);
                 ApiInterface mApiInterface = ApiClient.getClient().create(ApiInterface.class);
-
-                MultipartBody.Part body = null;
-                final RequestBody reqUser = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                        (preference.getUserPreferece().getId_user().isEmpty())?"":preference.getUserPreferece().getId_user());
-                final RequestBody reqServer = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                        (s.getIdServer().isEmpty())?"":s.getIdServer());
-                final RequestBody reqActive = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                        (hariIni.isEmpty())?"":hariIni);
-
-                Call<GetAcc> mAccCall;
-                final RequestBody reqAction = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                        "insert");
-                mAccCall = mApiInterface.postAcc(body, reqServer,
-                        reqUser, reqActive, reqAction);
+                Call<GetAcc> mAccCall =  mApiInterface.create(s.getIdServer(),preference.getUserPreferece().getId_user(),hariIni,"insert");
 
                 mAccCall.enqueue(new Callback<GetAcc>() {
                     @Override
                     public void onResponse(Call<GetAcc> call, Response<GetAcc> response) {
                         StringBuilder sb = new StringBuilder();
-                        sb.append(reqServer);
-                        sb.append(reqActive);
-                        sb.append(reqUser);
+                        sb.append(hariIni);
+                        sb.append(s.getIdServer());
+                        sb.append(preference.getUserPreferece().getId_user());
                         Toast.makeText(getApplicationContext(), sb,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),response.message().toString(),Toast.LENGTH_LONG).show();
                         RefreshData();
                     }
 

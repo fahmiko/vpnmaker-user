@@ -39,13 +39,12 @@ public interface ApiInterface {
             @Part("action") RequestBody action
     );
 
-    @Multipart
+    @FormUrlEncoded
     @POST("vpn/all")
-    Call<GetAcc> postAcc(
-            @Part MultipartBody.Part file,
-            @Part("user") RequestBody user,
-            @Part("server") RequestBody server,
-            @Part("active") RequestBody active,
-            @Part("action") RequestBody action
+    Call<GetAcc> create(
+            @Field("server") String server,
+            @Field("user") String user,
+            @Field("active") String active,
+            @Field("action") String action
     );
 }
